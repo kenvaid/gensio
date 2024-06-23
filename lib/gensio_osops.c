@@ -2714,8 +2714,16 @@ process_rs485(struct gensio_os_funcs *o, struct gensio_unix_termios *t, int fd,
     char *end;
     int err;
 
-    if (!str || strcasecmp(str, "off") == 0) {
+    if (!str) {
 	t->rs485.flags &= ~SER_RS485_ENABLED;
+	return 0;
+    }
+
+    if (strcasecmp(str, "off") == 0) {
+	t->rs485.flags = 0;
+	t->rs485.delay_rts_before_send = 0;
+	t->rs485.delay_rts_after_send = 0;
+	t->rs485_applied = true;
 	return 0;
     }
 
